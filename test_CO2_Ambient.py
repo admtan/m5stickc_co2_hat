@@ -10,8 +10,8 @@ import _thread
 AM_INTERVAL         = 60    # Ambientへデータを送るサイクル（秒）
 CO2_INTERVAL        = 5     # MH-19Bへco2測定値要求コマンドを送るサイクル（秒）
 TIMEOUT             = 30    # 何らかの事情でCO2更新が止まった時のタイムアウト（秒）のデフォルト値
-CO2_RED             = 1000  # co2濃度の換気警告閾値（ppm）のデフォルト値
-CO2_MAX             = 2000  # co2測定値のグラフ表示上限値
+CO2_RED             = 1500  # co2濃度の換気警告閾値（ppm）のデフォルト値
+CO2_MAX             = 5000  # co2測定値のグラフ表示上限値
 CO2_MIN             = 400   # co2測定値のグラフ表示下限値
 CO2_TREND_MARGIN    = 10    # co2トレンド比較時に"stay"として扱う差分
 AM_ID               = None  # AmbientのチャネルID
@@ -405,6 +405,7 @@ while True:
         d_rdy = False
         while d_rdy == False :
             mhz19b_data = bytearray(9)
+            mhz19b.write(b'\xff\x01\x79\x00\x00\x00\x00\x00\x06')   # 自動キャリブレーションを明示的に無効化
             mhz19b.write(b'\xff\x01\x86\x00\x00\x00\x00\x00\x79')   # co2測定値リクエスト
             print('>> CO2 data request')
             utime.sleep(0.1)
